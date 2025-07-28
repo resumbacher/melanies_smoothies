@@ -53,7 +53,25 @@ if ingredients_list:
         session.sql(my_insert_stmt).collect()
         st.success('Your Smoothie is ordered, ' + name_on_order + '!', icon="✅")
 
-import requests
-smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+#import requests
+#smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
 #st.text(smoothiefroot_response.json())
-st_df = st.dataframe(data = smoothiefroot_response.json(), use_container_width = True)
+#st_df = st.dataframe(data = smoothiefroot_response.json(), use_container_width = True)
+import streamlit as st
+import requests
+
+url = "https://my.smoothiefroot.com/api/fruit/watermelon"
+
+try:
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        st.dataframe(data, use_container_width=True)
+    else:
+        st.error(f"Fehler beim Abrufen der Daten: {response.status_code}")
+        st.text(response.text)  # Zeigt den tatsächlichen Inhalt – z. B. HTML-Fehlermeldung
+except requests.exceptions.RequestException as e:
+    st.error(f"Verbindungsfehler: {e}")
+except ValueError as e:
+    st.error(f"Antwort ist kein gültiges JSON: {e}")
+    st.text(response.text)
