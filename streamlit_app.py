@@ -1,7 +1,7 @@
 # Import python packages
 import streamlit as st
-
 from snowflake.snowpark.functions import col
+import requests
 
 # Write directly to the app
 st.title(f":cup_with_straw: Customize Your Smoothie :cup_with_straw:")
@@ -37,7 +37,8 @@ if ingredients_list:
 
     for fruit_chosen in ingredients_list:
         ingredients_string += fruit_chosen + ' '
-
+        smoothiefroot_response=requests.get("https://fruityvice.com/api/fruit/all")
+        sf_df=st.dataframe(data=smoothiefront_response.json(), use_container_width=True)
     #st.write(ingredients_string)
 #alter table SMOOTHIES.PUBLIC.ORDERS add column name_on_order varchar(100);
     my_insert_stmt = """ 
@@ -53,26 +54,3 @@ if ingredients_list:
         session.sql(my_insert_stmt).collect()
         st.success('Your Smoothie is ordered, ' + name_on_order + '!', icon="✅")
 
-#import requests
-#smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
-#st.text(smoothiefroot_response.json())
-#st_df = st.dataframe(data = smoothiefroot_response.json(), use_container_width = True)
-import streamlit as st
-import requests
-
-#url = "https://my.smoothiefroot.com/api/fruit/watermelon"
-url = "https://fruityvice.com/api/fruit/all" 
-
-try:
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        st.dataframe(data, use_container_width=True)
-    else:
-        st.error(f"Fehler beim Abrufen der Daten: {response.status_code}")
-        st.text(response.text)  # Zeigt den tatsächlichen Inhalt – z. B. HTML-Fehlermeldung
-except requests.exceptions.RequestException as e:
-    st.error(f"Verbindungsfehler: {e}")
-except ValueError as e:
-    st.error(f"Antwort ist kein gültiges JSON: {e}")
-    st.text(response.text)
