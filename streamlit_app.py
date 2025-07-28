@@ -60,7 +60,8 @@ if ingredients_list:
 import streamlit as st
 import requests
 
-url = "https://my.smoothiefroot.com/api/fruit/watermelon"
+#url = "https://my.smoothiefroot.com/api/fruit/watermelon"
+url = "https://fruityvice.com/api/fruit/all" 
 
 try:
     response = requests.get(url)
